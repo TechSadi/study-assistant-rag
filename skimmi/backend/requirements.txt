@@ -1,0 +1,17 @@
+pymupdf
+python-docx
+python-pptx
+sentence-transformers
+chromadb
+google-genai
+python-dotenv
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
+# Phase 4A: PostgreSQL, migrations, Supabase token verification
+sqlalchemy>=2.0
+alembic>=1.13
+psycopg[binary]>=3.1
+pyjwt[crypto]>=2.8
+pytest

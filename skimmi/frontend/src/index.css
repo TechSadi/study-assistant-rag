@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* Skimmi palette: fountain-pen ink on cool notebook paper, with a highlighter
+   used only for things that point back into the reader's documents. */
+@theme {
+  --color-paper: #f2f4f3;
+  --color-sheet: #ffffff;
+  --color-ink: #16233f;
+  --color-ink-soft: #4a5670;
+  --color-ink-faint: #6f7a8f;
+  --color-rule: #dce1e7;
+  --color-rule-strong: #c5ccd6;
+  --color-navy: #1d3461;
+  --color-navy-deep: #13264a;
+  --color-marker: #f7e15a;
+  --color-marker-soft: #fcf3b4;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdeceb;
+  --color-ok: #1d6b45;
+  --color-ok-soft: #e4f3ea;
+
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Skimmi Operators", "Newsreader", ui-serif, Georgia, serif;
+
+  --animate-typing: typing 1.2s ease-in-out infinite;
+}
+
+/* Newsreader draws + = < > very small, which hurts formulas in answers.
+   Borrow just those characters from a system serif. */
+@font-face {
+  font-family: "Skimmi Operators";
+  src: local("Georgia"), local("Times New Roman");
+  unicode-range: U+2B, U+3C-3E, U+B1, U+D7, U+F7, U+2212;
+}
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+@layer base {
+  /* The app is a fixed-height shell; only its inner panes scroll. */
+  html, body, #root { height: 100%; }
+  html, body { overflow: hidden; overscroll-behavior: none; }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-navy);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  button { cursor: pointer; touch-action: manipulation; }
+  button:disabled { cursor: not-allowed; }
+}
+
+@layer components {
+  /* A highlighter stroke: slightly inset and ragged at the ends, like a real marker. */
+  .marker {
+    background-image: linear-gradient(
+      100deg,
+      transparent 0.15em,
+      var(--color-marker) 0.3em,
+      var(--color-marker) calc(100% - 0.3em),
+      transparent calc(100% - 0.12em)
+    );
+    background-size: 100% 72%;
+    background-position: 0 70%;
+    background-repeat: no-repeat;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* Gemini answers are markdown; give them readable, note-like prose. */
+  .answer {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+  .answer > * + * { margin-top: 0.75em; }
+  .answer h1, .answer h2, .answer h3 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1.25em;
+  }
+  .answer ul { list-style: disc; padding-left: 1.25em; }
+  .answer ol { list-style: decimal; padding-left: 1.4em; }
+  .answer li + li { margin-top: 0.3em; }
+  .answer li::marker { color: var(--color-ink-faint); }
+  .answer strong { font-weight: 600; }
+  .answer code {
+    font-size: 0.85em;
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule);
+    border-radius: 4px;
+    padding: 0.05em 0.3em;
+  }
+  .answer pre {
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule);
+    border-radius: 8px;
+    padding: 0.75em 1em;
+    overflow-x: auto;
+    font-size: 0.9rem;
+  }
+  .answer pre code { border: 0; padding: 0; background: none; }
+  .answer blockquote {
+    border-left: 3px solid var(--color-rule-strong);
+    padding-left: 1em;
+    color: var(--color-ink-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
